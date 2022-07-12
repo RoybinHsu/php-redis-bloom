@@ -1,0 +1,17 @@
+{
+    "name": "xushunbin/bloom",
+    "description": "使用php加redis实现bloom filter",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Xushunbin\\Bloom\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "xushunbin"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
