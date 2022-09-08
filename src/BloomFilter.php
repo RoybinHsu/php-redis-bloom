@@ -1,5 +1,6 @@
 <?php
 
+use JetBrains\PhpStorm\Pure;
 use Redis;
 
 /**
@@ -16,19 +17,19 @@ abstract class BloomFilter
      *
      * @var int
      */
-    protected int $limit = 2000;
+    public int $limit = 2000;
 
     /**
      * 使用的hash函数名称
      *
      * @var string[]
      */
-    protected array $func = ['Fnv164Hash', 'Md5Hash', 'RipeMd160Hash'];
+    public array $func = ['Fnv164Hash', 'Md5Hash', 'RipeMd160Hash'];
 
     /**
      * @var BloomFilterHash
      */
-    protected BloomFilterHash $hash;
+    public BloomFilterHash $hash;
 
 
     /**
@@ -36,55 +37,43 @@ abstract class BloomFilter
      *
      * @var float
      */
-    protected float $members = 1e7; // 默认10000000
+    public float $members = 1e7; // 默认10000000
 
     /**
      * 能接受的误判率
      *
      * @var float
      */
-    protected float $fpp = 0.0001;
+    public float $fpp = 0.0001;
 
     /**
      * 保存数据的bit分配大小默认1m
      *
      * @var int
      */
-    protected int $bitSize = 1 << 23;
+    public int $bitSize = 1 << 23;
 
 
     /**
-     * redis连接地址
+     *[
+     * 'scheme' => 'redis'
+     * 'host' => '127.0.0.1'
+     * 'port' => 6379
+     * 'user' => ''
+     * 'pass' => 'password'
+     * 'path' => '/1'
+     * ]
      *
      * @var string
      */
-    protected string $host = 'localhost';
-    /**
-     * 端口
-     *
-     * @var int
-     */
-    protected int $port = 6379;
+    public string $redis = 'redis://:123456@127.0.0.1:6379/0';
 
-    /**
-     * redis连接密码
-     *
-     * @var string
-     */
-    protected string $password = '';
-
-    /**
-     * redis使用的db
-     *
-     * @var int
-     */
-    protected int $db = 0;
 
     /**
      * redis连接
      *
      */
-    private ?\Redis $redis = null;
+    private ?\Redis $_redis = null;
 
     /**
      * @param array $config
@@ -104,21 +93,25 @@ abstract class BloomFilter
         if (!class_exists('Redis')) {
             throw new Exception('redis扩展不存在');
         }
-        $this->redis = new Redis();
-        $this->redis->connect($this->host, $this->port);
+        $conf = parse_url($this->redis);
+        $this->_redis = new Redis();
+        $this->_redis->connect($conf['host'], $conf['port']);
         if ($this->password !== null) {
-            $this->redis->auth($this->password);
+            $this->_redis->auth($conf['pass']);
         }
-        $this->redis->select($this->db);
+        $this->_redis->select(ltrim($conf['path'], '/'));
         $this->hash = new BloomFilterHash(['bitSize' => $this->bitSize]);
     }
 
     /**
-     * 设置
+     * 设置存储过滤器的键名称
      *
      * @return string
      */
-    abstract protected function getBucket(): string;
+     public function getBucket(): string
+     {
+         return 'REDIS:BLOOM';
+     }
 
     /**
      * 批量添加数据到redis
@@ -146,7 +139,7 @@ abstract class BloomFilter
             end
             return true
         script;
-        return $this->redis->eval($lua, $offsets, count($offsets));
+        return $this->_redis->eval($lua, $offsets, count($offsets));
     }
 
     /**
@@ -175,7 +168,7 @@ abstract class BloomFilter
             end
             return 1
         script;
-        return boolval($this->redis->eval($lua, $offsets, count($offsets)));
+        return boolval($this->_redis->eval($lua, $offsets, count($offsets)));
     }
 
     /**
@@ -206,7 +199,7 @@ abstract class BloomFilter
             end
             return result
         script;
-        return boolval($this->redis->eval($lua, $offsets, count($offsets)));
+        return boolval($this->_redis->eval($lua, $offsets, count($offsets)));
 
     }
 
@@ -217,7 +210,7 @@ abstract class BloomFilter
      *
      * @return float|int|string
      */
-    public function bitSize(bool $human = false)
+    public function bitSize(bool $human = false): float|int|string
     {
         // 通过存储数据和误判率获取
         // 获取bit大小
@@ -233,7 +226,7 @@ abstract class BloomFilter
      *
      * @return false|float
      */
-    public function hashFuncCount()
+    public function hashFuncCount(): false|float
     {
         $m = $this->bitSize();
         $k = ($m / $this->members) * log(2, M_E);

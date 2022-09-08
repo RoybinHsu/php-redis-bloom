@@ -198,7 +198,6 @@ class BloomFilterHash
         $hash = hexdec(hash($name, $string));
         $hash = number_format($hash, 0, '', '');
         return (($hash % 0xFFFFFFFF) & 0xFFFFFFFF) % $this->bitSize;
-        //return bcmod($hash, $this->bitSize);
     }
 
     /**
