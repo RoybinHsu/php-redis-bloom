@@ -7,8 +7,7 @@
     },
     "autoload": {
         "psr-4": {
-            "PhpRedis\\Bloom\\": "src/",
-            "PhpRedis\\Bloom\\Test\\": "src/test"
+            "xushunbin\\Bloom\\": "src/"
         }
     },
     "authors": [

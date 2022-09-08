@@ -68,6 +68,13 @@ abstract class BloomFilter
      */
     public string $redis = 'redis://:123456@127.0.0.1:6379/0';
 
+    /**
+     * 默认存储名称
+     *
+     * @var string
+     */
+    public string $bucket = 'REDIS:BLOOM_DEFAULT';
+
 
     /**
      * redis连接
@@ -110,7 +117,7 @@ abstract class BloomFilter
      */
      public function getBucket(): string
      {
-         return 'REDIS:BLOOM';
+         return $this->bucket;
      }
 
     /**
