@@ -1,5 +1,5 @@
 {
-    "name": "php-redis/bloom",
+    "name": "xushunbin/php-redis-bloom",
     "description": "php redis实现bloom过滤器",
     "type": "library",
     "require": {
