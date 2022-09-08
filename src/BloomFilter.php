@@ -1,6 +1,7 @@
 <?php
 
-use JetBrains\PhpStorm\Pure;
+namespace xushunbin\Bloom;
+
 use Redis;
 
 /**
@@ -80,7 +81,7 @@ abstract class BloomFilter
      * redis连接
      *
      */
-    private ?\Redis $_redis = null;
+    private ?Redis $_redis = null;
 
     /**
      * @param array $config
