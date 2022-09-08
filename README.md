@@ -2,8 +2,17 @@
 通过php redis实现bloom过滤器
 
 
+### Install
+```
+composer require xushunbin/php-redis-bloom
+```
+
+
+
 ### Example 基类的属性可以被覆盖
 ```
+use 
+
 class TestBloomFilter extends BloomFilter
 {
 
@@ -25,7 +34,9 @@ class TestBloomFilter extends BloomFilter
     }
 
 }
+```
 
+```
 $bloom  = new TestBloomFilter();
 $phones = ['138000000000', '138000000001', '138000000002'];
 try {

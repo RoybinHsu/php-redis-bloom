@@ -3,8 +3,7 @@
     "description": "php redis实现bloom过滤器",
     "type": "library",
     "require": {
-        "php": ">=7.3",
-        "phpunit/phpunit": "7.3"
+        "php": ">=7.3"
     },
     "autoload": {
         "psr-4": {
