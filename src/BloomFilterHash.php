@@ -1,6 +1,6 @@
 <?php
 
-namespace xushunbin\Bloom;
+namespace xu\Bloom;
 
 /**
  * 布隆过滤器hash
