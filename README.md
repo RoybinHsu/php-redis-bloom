@@ -4,7 +4,7 @@
 
 ### Install
 ```
-composer require xushunbin/php-redis-bloom
+composer require xushunbin/php-redis-bloom 1.0
 ```
 
 
