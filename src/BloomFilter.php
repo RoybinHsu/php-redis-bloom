@@ -147,7 +147,7 @@ class BloomFilter
             end
             return true
         script;
-        return $this->_redis->eval($lua, $offsets, count($offsets));
+        return $this->_redis->eval($lua, count($offsets), ...$offsets);
     }
 
     /**
@@ -176,7 +176,7 @@ class BloomFilter
             end
             return 1
         script;
-        return boolval($this->_redis->eval($lua, $offsets, count($offsets)));
+        return boolval($this->_redis->eval($lua, count($offsets), ...$offsets));
     }
 
     /**
@@ -207,7 +207,7 @@ class BloomFilter
             end
             return result
         script;
-        return boolval($this->_redis->eval($lua, $offsets, count($offsets)));
+        return boolval($this->_redis->eval($lua, count($offsets), ...$offsets));
 
     }
 
