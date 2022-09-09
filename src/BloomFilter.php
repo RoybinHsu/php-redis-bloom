@@ -3,14 +3,13 @@
 namespace xu\Bloom;
 
 use Predis\Client;
-use Redis;
 
 /**
  * 抽象类
  *
  * 使用bloom过滤器需要集成该类根据自己的需求并重写响应的属性和方法
  */
-abstract class BloomFilter
+class BloomFilter
 {
 
     /**
@@ -26,7 +25,7 @@ abstract class BloomFilter
      *
      * @var string[]
      */
-    public array $func = ['Fnv164Hash', 'Md5Hash', 'RipeMd160Hash'];
+    public array $func = ['Crc32','JSHash', 'DEKHash'];
 
     /**
      * @var BloomFilterHash
@@ -82,7 +81,7 @@ abstract class BloomFilter
      * redis连接
      *
      */
-    private ?Redis $_redis = null;
+    private ?Client $_redis = null;
 
     /**
      * @param array $config
@@ -219,7 +218,7 @@ abstract class BloomFilter
      *
      * @return float|int|string
      */
-    public function bitSize(bool $human = false): float|int|string
+    public function bitSize(bool $human = false)
     {
         // 通过存储数据和误判率获取
         // 获取bit大小
@@ -233,9 +232,9 @@ abstract class BloomFilter
     /**
      * 获取要使用hash的个数
      *
-     * @return false|float
+     * @return float
      */
-    public function hashFuncCount(): false|float
+    public function hashFuncCount()
     {
         $m = $this->bitSize();
         $k = ($m / $this->members) * log(2, M_E);

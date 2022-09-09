@@ -6,24 +6,19 @@ namespace xu\Bloom;
  * 布隆过滤器hash
  *
  * 执行10w次hash所消耗的时间
- * [
- * 'Fnv164Hash' => '0.3583000'
- * 'Md5Hash' => '0.4924000'
- * 'RipeMd160Hash' => '0.5923000'
- * 'Sha256Hash' => '0.8314000'
- * 'Haval2563Hash' => '0.8340000'
- * 'GostHash' => '0.8962000'
- * 'SneFruHash' => '0.9837000'
- * 'DEKHash' => '1.0073000'
- * 'JSHash' => '1.0186000'
- * 'FNVHash' => '1.0412000'
- * 'DJBHash' => '1.0417000'
- * 'SDBMHash' => '1.0581000'
- * 'PJWHash' => '1.0615000'
- * 'BKDRHash' => '1.0859000'
- * 'ELEHash' => '1.2474000'
- * 'WhirlpoolHash' => '1.5332000'
- * ]
+ *Array
+ * (
+ *   [Crc32] => 0.0015308856964111
+ *   [DJBHash] => 0.009058952331543
+ *   [JSHash] => 0.0091159343719482
+ *   [PJWHash] => 0.0092241764068604
+ *   [DEKHash] => 0.0094349384307861
+ *   [FNVHash] => 0.0097649097442627
+ *   [BKDRHash] => 0.0098061561584473
+ *   [SDBMHash] => 0.0098531246185303
+ *   [ELEHash] => 0.011341094970703
+ * )
+
  *
  *
  * @property $bitSize
@@ -190,105 +185,16 @@ class BloomFilterHash
     }
 
     /**
-     * @param string $string
-     * @param string $name
-     *
-     * @return int
-     */
-    private function _hash(string $string, string $name): int
-    {
-        $hash = hexdec(hash($name, $string));
-        $hash = number_format($hash, 0, '', '');
-        return (($hash % 0xFFFFFFFF) & 0xFFFFFFFF) % $this->bitSize;
-    }
-
-    /**
-     * md5变型的hash
+     * crc32
      *
      * @param string $string
      * @param $len
      *
      * @return int
      */
-    public function Md5Hash(string $string, $len = null): int
+    public function Crc32(string $string, $len = null): int
     {
-        return $this->_hash($string, 'md5');
-    }
-
-
-    /**
-     * @param string $string
-     * @param $len
-     *
-     * @return int
-     */
-    public function Sha256Hash(string $string, $len = null): int
-    {
-        return $this->_hash($string, 'sha256');
-    }
-
-
-    /**
-     * ripemd160 hash算法
-     *
-     * @param string $string
-     * @param null $len
-     *
-     * @return int
-     */
-    public function RipeMd160Hash(string $string, $len = null): int
-    {
-        return $this->_hash($string, 'ripemd160');
-    }
-
-    /**
-     * @param string $string
-     * @param null $len
-     *
-     * @return int
-     */
-    public function GostHash(string $string, $len = null): int
-    {
-        return $this->_hash($string, 'gost');
-    }
-
-    /**
-     * @param string $string
-     * @param null $len
-     *
-     * @return int
-     */
-    public function WhirlpoolHash(string $string, $len = null): int
-    {
-        return $this->_hash($string, 'whirlpool');
-    }
-
-    /**
-     * @param string $string
-     * @param null $len
-     *
-     * @return int
-     */
-    public function SneFruHash(string $string, $len = null): int
-    {
-        return $this->_hash($string, 'snefru');
-    }
-
-    /**
-     * @param string $string
-     * @param null $len
-     *
-     * @return int
-     */
-    public function Haval2563Hash(string $string, $len = null): int
-    {
-        return $this->_hash($string, 'haval256,3');
-    }
-
-    public function Fnv164Hash(string $string, $len = null): int
-    {
-        return $this->_hash($string, 'fnv164');
-
+        return crc32($string) % $this->bitSize;
     }
 
 
