@@ -2,6 +2,7 @@
 
 namespace xu\Bloom;
 
+use Predis\Client;
 use Redis;
 
 /**
@@ -102,9 +103,9 @@ abstract class BloomFilter
             throw new Exception('redis扩展不存在');
         }
         $conf = parse_url($this->redis);
-        $this->_redis = new Redis();
-        $this->_redis->connect($conf['host'], $conf['port']);
-        if ($this->password !== null) {
+        $this->_redis = new Client($this->redis);
+        $this->_redis->connect();
+        if (!empty($conf['pass'])) {
             $this->_redis->auth($conf['pass']);
         }
         $this->_redis->select(ltrim($conf['path'], '/'));
